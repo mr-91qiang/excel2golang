@@ -19,13 +19,13 @@ type TableColumn struct {
 }
 */
 // 按行读取数据
-func getRows(fileName string) [][]string {
+func getRows(fileName string, sheet int) [][]string {
 	file, err := excelize.OpenFile(fileName)
 	if err != nil {
 		panic(err)
 	}
 	defer file.Close()
-	rows, err := file.GetRows(file.GetSheetList()[0], excelize.Options{})
+	rows, err := file.GetRows(file.GetSheetList()[sheet], excelize.Options{})
 	if err != nil {
 		panic(err)
 	}
@@ -102,11 +102,12 @@ func rowsToTableColumns[T any](rows [][]string, tag2fieldIndex map[string]int) [
 	return data
 }
 func main() {
+	sheet := 1
 	args := os.Args
 	for _, arg := range args {
 		if strings.Contains(arg, ".xlsx") {
 			initTag2FieldIdx := initTag2FieldIdx(source.I18{}, "xlsx")
-			rows := getRows(arg)
+			rows := getRows(arg, sheet)
 			tbCols := rowsToTableColumns[source.I18](rows, initTag2FieldIdx)
 			//c := Map[arg]
 
