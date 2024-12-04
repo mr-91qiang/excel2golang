@@ -47,13 +47,13 @@ func GetEN(lang constant.Lang, num int) string {
 	switch lang {
 	case constant.EN:
 		return i18.En
-	case "de":
+	case constant.DE:
 		return i18.DE
-	case "ru":
+	case constant.RU:
 		return i18.Ru
 	case constant.ZH:
 		return i18.ZH
-	case "fr":
+	case constant.Fr:
 		return i18.FR
 	default:
 		return i18.ZH
