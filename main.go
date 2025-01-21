@@ -2,6 +2,7 @@ package main
 
 import (
 	"excel2golang/source"
+	"fmt"
 	"github.com/xuri/excelize/v2"
 	"os"
 	"reflect"
@@ -57,7 +58,7 @@ func rowsToTableColumns[T any](rows [][]string, tag2fieldIndex map[string]int) [
 	for _, row := range rows[1:] {
 		tbCol := new(T)
 		rv := reflect.ValueOf(tbCol).Elem()
-		for i := 0; i < len(row); i++ {
+		for i := 0; i < len(head); i++ {
 			colCell := row[i]
 			// 通过 tag 取到结构体字段下标
 			fieldIndex, ok := tag2fieldIndex[head[i]]
@@ -101,8 +102,8 @@ func rowsToTableColumns[T any](rows [][]string, tag2fieldIndex map[string]int) [
 	}
 	return data
 }
-func main() {
-	sheet := 1
+func I18Excel() {
+	sheet := 0
 	args := os.Args
 	for _, arg := range args {
 		if strings.Contains(arg, ".xlsx") {
@@ -119,7 +120,49 @@ func main() {
 			}
 		}
 	}
+}
 
+func main() {
+	LevelExcel()
+}
+
+var fmtStr = `{ GameLevelId: %d, Sub: "%s", Main: "%s", Name: "%s",State:1,
+				GameLevelI18s: []strategy.GameLevelI18{
+					{Lang: string(constant.ZH), Main: "%s", Name: "%s", Sub: "%s"},
+					{Lang: string(constant.EN), Main: "%s", Name: "%s", Sub: "%s"},
+					{Lang: string(constant.RU), Main: "%s", Name: "%s", Sub: "%s"},
+					{Lang: string(constant.DE), Main: "%s", Name: "%s", Sub: "%s"},
+					{Lang: string(constant.FR), Main: "%s", Name: "%s", Sub: "%s"},
+				},
+			},
+`
+
+func LevelExcel() {
+	sheet := 5
+	//id := 312
+	args := os.Args
+	for _, arg := range args {
+		if strings.Contains(arg, ".xlsx") {
+			initTag2FieldIdx := initTag2FieldIdx(source.Level{}, "xlsx")
+			rows := getRows(arg, sheet)
+			tbCols := rowsToTableColumns[source.Level](rows, initTag2FieldIdx)
+			//c := Map[arg]
+			//var list []strategy.GameLevel
+			fileContent := ""
+
+			for _, level := range tbCols {
+				val := fmt.Sprintf(fmtStr, level.GameLevelId, level.Sub, level.Cn, level.Cn,
+					level.Cn, level.Cn, level.Sub,
+					level.En, level.En, level.Sub,
+					level.Ru, level.Ru, level.Sub,
+					level.De, level.De, level.Sub,
+					level.Fr, level.Fr, level.Sub,
+				)
+				fileContent += val
+			}
+			os.WriteFile("level.go", []byte(fileContent), os.ModePerm)
+		}
+	}
 }
 
 // getTags 从结构体中获取指定标签名的所有字段标签值

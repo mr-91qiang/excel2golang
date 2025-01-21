@@ -53,7 +53,7 @@ func GetEN(lang constant.Lang, num int) string {
 		return i18.Ru
 	case constant.ZH:
 		return i18.ZH
-	case constant.Fr:
+	case constant.FR:
 		return i18.FR
 	default:
 		return i18.ZH
