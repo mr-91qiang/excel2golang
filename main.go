@@ -138,7 +138,7 @@ var fmtStr = `{ GameLevelId: %d, Sub: "%s", Main: "%s", Name: "%s",State:1,
 `
 
 func LevelExcel() {
-	sheet := 5
+	sheet := 7
 	//id := 312
 	args := os.Args
 	for _, arg := range args {
@@ -151,16 +151,16 @@ func LevelExcel() {
 			fileContent := ""
 
 			for _, level := range tbCols {
-				val := fmt.Sprintf(fmtStr, level.GameLevelId, level.Sub, level.Cn, level.Cn,
-					level.Cn, level.Cn, level.Sub,
-					level.En, level.En, level.Sub,
-					level.Ru, level.Ru, level.Sub,
-					level.De, level.De, level.Sub,
-					level.Fr, level.Fr, level.Sub,
+				val := fmt.Sprintf(fmtStr, level.GameLevelId, level.CNSub, level.CnMain, level.CnMain,
+					level.CnMain, level.CnMain, level.CNSub,
+					level.EnMain, level.EnMain, level.ENSub,
+					level.RuMain, level.RuMain, level.RUSub,
+					level.DeMain, level.DeMain, level.DESub,
+					level.FrMain, level.FrMain, level.FRSub,
 				)
 				fileContent += val
 			}
-			os.WriteFile("level.go", []byte(fileContent), os.ModePerm)
+			os.WriteFile("./target/level.go", []byte(fileContent), os.ModePerm)
 		}
 	}
 }
